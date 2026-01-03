@@ -32,14 +32,19 @@ def main():
     screen.fill(p.Color("white"))
     gs =  ChessEngine.GameState()
     print(gs.board)
+    valid_moves = gs.get_valid_moves()
+    move_made = False # Flag variable for when a move is made
+
     load_images() # Only do this once, before the while Loop
     running = True
     square_selected = () # no square is selected as a default, keep track of the last click of the user (tuple : (row, col))
     player_clicks = [] # keep track of player clicks (2 tuples: [(6, 4), (4, 4)])
+
     while running:
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
+                # Rat Moves
             elif e.type == p.MOUSEBUTTONDOWN:
                 location = p.mouse.get_pos() # (x, y) location of mouse
                 col = location[0] // SQUARE_SIZE
@@ -53,9 +58,22 @@ def main():
                 if len(player_clicks) == 2: #after 2nd click
                     move = ChessEngine.Move(player_clicks[0], player_clicks[1], gs.board)
                     print(move.get_chess_notation())
+                    if move in valid_moves:
+                        gs.make_move(move)
+                        move_made = True
                     gs.make_move(move)
                     square_selected = () # Reset user clicks
                     player_clicks = []
+            # Key Handlers
+            elif e.type == p.KEYDOWN:
+                if e.key == p.K_z: # Undo when 'z' is pressed
+                    gs.undo_move()
+                    move_made = True
+
+        if move_made:
+            valid_moves = gs.get_valid_moves()
+            move_made = False
+
         draw_game_state(screen, gs)
         clock.tick(MAX_FPS)
         p.display.flip()
