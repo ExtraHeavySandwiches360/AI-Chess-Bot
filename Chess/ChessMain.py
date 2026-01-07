@@ -51,7 +51,7 @@ def main():
                 row = location[1] // SQUARE_SIZE
                 if square_selected == (row, col): # The user clicked the same square twice
                     square_selected = () #deselect
-                    player_clicks = [] #clear player clicks
+                    player_clicks = [] # Clear player clicks
                 else:
                     square_selected = (row, col)
                     player_clicks.append(square_selected) # Append for both 1st and 2nd clicks
@@ -61,7 +61,7 @@ def main():
                     if move in valid_moves:
                         gs.make_move(move)
                         move_made = True
-                    gs.make_move(move)
+
                     square_selected = () # Reset user clicks
                     player_clicks = []
             # Key Handlers
