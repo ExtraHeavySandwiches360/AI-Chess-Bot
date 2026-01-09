@@ -107,31 +107,81 @@ class GameState():
     Get all the rook moves for the pawn located at row, col and add these moves to the list
     '''
     def get_rook_moves(self, row, col, moves):
-        pass
+        directions = ((-1, 0), (0, -1), (1, 0), (0, 1)) #up, left, down, right
+        enemy_color = "b" if self.whiteToMove else "w"
+        for d in directions:
+            for i in range(1, 8): # Rook can move max of 7 squares
+                end_row = row + d[0] * i
+                end_col = col + d[1] * i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == "--": # empty space valid
+                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                    elif end_piece[0] == enemy_color: #empty piece valid
+                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                        break
+                    else:
+                        break
+                else:
+                    break
+
 
     '''
     Get all the knight moves for the pawn located at row, col and add these moves to the list
     '''
     def get_knight_moves(self, row, col, moves):
-        pass
+        knight_moves = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
+        ally_color = "w" if self.whiteToMove else "b"
+        for m in knight_moves:
+            end_row = row + m[0]
+            end_col = col + m[1]
+            if 0 <= end_row < 8 and 0 <= end_col < 8:
+                end_piece = self.board[end_row][end_col]
+                if end_piece[0] != ally_color:
+                    moves.append(Move((row, col), (end_row, end_col), self.board))
 
     '''
     Get all the bishop moves for the pawn located at row, col and add these moves to the list
     '''
     def get_bishop_moves(self, row, col, moves):
-        pass
+        directions = ((-1, -1), (-1, 1), (1, -1), (1, 1))  # up, left, down, right
+        enemy_color = "b" if self.whiteToMove else "w"
+        for d in directions:
+            for i in range(1, 8): # Bishop can move max of 7 squares
+                end_row = row + d[0] * i
+                end_col = col + d[1] * i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == "--":  # empty space valid
+                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                    elif end_piece[0] == enemy_color:  # empty piece valid
+                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                        break
+                    else: # Friendly piece invalid
+                        break
+                else:  # off board
+                    break
 
     '''
     Get all the queen moves for the pawn located at row, col and add these moves to the list
     '''
     def get_queen_moves(self, row, col, moves):
-        pass
+        self.get_rook_moves(row, col, moves)
+        self.get_bishop_moves(row, col, moves)
 
     '''
     Get all the king moves for the pawn located at row, col and add these moves to the list
     '''
     def get_king_moves(self, row, col, moves):
-        pass
+        king_moves = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+        ally_color = "w" if self.whiteToMove else "b"
+        for i in range(8):
+            end_row = row + king_moves[i][0]
+            end_col = col + king_moves[i][1]
+            if 0 <= end_row < 8 and 0 <= end_col < 8:
+                end_piece = self.board[end_row][end_col]
+                if end_piece[0] != ally_color:
+                    moves.append(Move((row, col), (end_row, end_col), self.board))
 
 class Move():
     # Maps ranks to rows and files to columns

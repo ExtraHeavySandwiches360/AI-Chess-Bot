@@ -61,7 +61,10 @@ def main():
                     if move in valid_moves:
                         gs.make_move(move)
                         move_made = True
-
+                        square_selected = ()
+                        player_clicks = []
+                    else:
+                        player_clicks = [square_selected]
                     square_selected = () # Reset user clicks
                     player_clicks = []
             # Key Handlers
